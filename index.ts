@@ -1,6 +1,7 @@
 import fastify from "fastify";
 
 import { LogMessage, LogMessageType } from "./schema/LogMessage";
+import { LogMessages, LogMessagesType } from "./schema/LogMessages";
 
 const server = fastify();
 
@@ -15,6 +16,20 @@ server.post<{ Body: LogMessageType; Reply: LogMessageType }>(
     console.log("POST /log", logMessage);
 
     reply.status(200).send(logMessage);
+  }
+);
+
+server.post<{ Body: LogMessagesType; Reply: LogMessagesType }>(
+  "/log/batch",
+  { schema: { body: LogMessages, response: { 200: LogMessages } } },
+  async (request, reply) => {
+    const logMessages = request.body;
+
+    // TODO: Remove sensitive data.
+    // TODO: Store log messages.
+    console.log("POST /log/batch", logMessages);
+
+    reply.status(200).send(logMessages);
   }
 );
 
