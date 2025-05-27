@@ -43,6 +43,11 @@
     "@fastify/forwarded" "^3.0.0"
     ipaddr.js "^2.1.0"
 
+"@sinclair/typebox@^0.34.33":
+  version "0.34.33"
+  resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.34.33.tgz#10ab3f1261ed9e754660250fad3e69cca1fa44b2"
+  integrity sha512-5HAV9exOMcXRUxo+9iYB5n09XxzCXnfy4VTNW4xnDv+FgjzAGY989C28BIdljKqmF+ZltUwujE3aossvcVtq6g==
+
 "@types/node@^22.15.22":
   version "22.15.22"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-22.15.22.tgz#a138bd3dcc8b5d30ad2fda6354137581c2f05ee3"
