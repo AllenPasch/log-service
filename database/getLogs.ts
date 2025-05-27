@@ -10,7 +10,7 @@ export const getLogs = async (
   filters: LogFiltersType
 ): Promise<LogType[]> => {
   const where: string[] = [];
-  const params: any[] = [];
+  const params: (string | number)[] = [];
 
   if (filters.after) {
     where.push("timestamp_ms > ?");
@@ -21,8 +21,8 @@ export const getLogs = async (
     params.push(toTimestampMs(filters.before));
   }
   if (filters.severity?.length) {
-    const inClause = filters.severity.map(() => "?").join(", ");
-    where.push(`severity IN (${inClause})`);
+    const inParamPlaceholders = filters.severity.map(() => "?").join(", ");
+    where.push(`severity IN (${inParamPlaceholders})`);
 
     filters.severity.forEach((severity) => {
       params.push(severity);
@@ -31,8 +31,8 @@ export const getLogs = async (
 
   let query = "SELECT * FROM log";
   if (where.length) {
-    const whereClause = where.join(" AND ");
-    query = `${query} WHERE ${whereClause}`;
+    const whereConditions = where.join(" AND ");
+    query = `${query} WHERE ${whereConditions}`;
   }
   query = `${query} ORDER BY timestamp_ms`;
 

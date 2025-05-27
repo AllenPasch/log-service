@@ -23,9 +23,11 @@ export const getStats = async (
     error: 0,
   };
 
-  counts.forEach(({ severity, count }) => {
-    logCount[severity as Severity] = count;
-  });
+  counts.forEach(
+    ({ severity, count }: { severity: Severity; count: number }) => {
+      logCount[severity] = count;
+    }
+  );
 
   return {
     logCount,
