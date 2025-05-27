@@ -7,7 +7,7 @@ const MAX_GITHUB_REPOSITORY_NAME_LENGTH = 100;
 
 const MAX_LOG_MESSAGE_LENGTH = 4096;
 
-export const LogMessage = Type.Object({
+export const Log = Type.Object({
   timestamp: Type.String({ pattern: ISO_8601_REGEX }),
   source: Type.Optional(
     Type.String({ maxLength: MAX_GITHUB_REPOSITORY_NAME_LENGTH })
@@ -18,4 +18,4 @@ export const LogMessage = Type.Object({
   patient_id: Type.Optional(Type.String()),
 });
 
-export type LogMessageType = Static<typeof LogMessage>;
+export type LogType = Static<typeof Log>;

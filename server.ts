@@ -1,52 +1,51 @@
 import fastify from "fastify";
 
+import { Log, LogType } from "./schema/Log";
 import { LogFilters, LogFiltersType } from "./schema/LogFilters";
-import { LogMessage, LogMessageType } from "./schema/LogMessage";
-import { LogMessages, LogMessagesType } from "./schema/LogMessages";
+import { Logs, LogsType } from "./schema/Logs";
 import { Stats, StatsType } from "./schema/Stats";
+import { removeSensitiveData } from "./security/removeSensitiveData";
 
 const server = fastify();
 
-server.post<{ Body: LogMessageType; Reply: LogMessageType }>(
+server.post<{ Body: LogType; Reply: LogType }>(
   "/log",
-  { schema: { body: LogMessage, response: { 201: LogMessage } } },
+  { schema: { body: Log, response: { 201: Log } } },
   async (request, reply) => {
-    const logMessage = request.body;
+    const log = removeSensitiveData(request.body);
 
-    // TODO: Remove sensitive data.
-    // TODO: Store log message.
-    console.log("POST /log", logMessage);
+    // TODO: Store log.
+    console.log("POST /log", log);
 
-    reply.status(201).send(logMessage);
+    reply.status(201).send(log);
   }
 );
 
-server.post<{ Body: LogMessagesType; Reply: LogMessagesType }>(
+server.post<{ Body: LogsType; Reply: LogsType }>(
   "/log/batch",
-  { schema: { body: LogMessages, response: { 201: LogMessages } } },
+  { schema: { body: Logs, response: { 201: Logs } } },
   async (request, reply) => {
-    const logMessages = request.body;
+    const logs = request.body.map(removeSensitiveData);
 
-    // TODO: Remove sensitive data.
-    // TODO: Store log messages.
-    console.log("POST /log/batch", logMessages);
+    // TODO: Store logs.
+    console.log("POST /log/batch", logs);
 
-    reply.status(201).send(logMessages);
+    reply.status(201).send(logs);
   }
 );
 
-server.get<{ Query: LogFiltersType; Reply: LogMessagesType }>(
+server.get<{ Query: LogFiltersType; Reply: LogsType }>(
   "/logs",
-  { schema: { querystring: LogFilters, response: { 200: LogMessages } } },
+  { schema: { querystring: LogFilters, response: { 200: Logs } } },
   async (request, reply) => {
     const filters = request.query;
 
     // TODO: Get this from the database, while applying filtering.
-    const logMessages: LogMessagesType = [];
+    const logs: LogsType = [];
 
     console.log("GET /logs filters=", filters);
 
-    reply.status(200).send(logMessages);
+    reply.status(200).send(logs);
   }
 );
 
