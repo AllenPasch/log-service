@@ -14,6 +14,7 @@ export const LogMessage = Type.Object({
   ),
   severity: Type.Enum(Severity, { default: Severity.info }),
   message: Type.String({ maxLength: MAX_LOG_MESSAGE_LENGTH }),
+  // This field is thrown away, so there’s no reason to validate it.
   patient_id: Type.Optional(Type.String()),
 });
 
