@@ -1,0 +1,17 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# draw.io
+/documentation/.$*.drawio.bkp
+/documentation/.$*.drawio.dtmp
+
+# mac
+.DS_Store
+
+# typescript
+*.js
+*.tsbuildinfo
+
+# yarn
+/node_modules/
+yarn-debug.log*
+yarn-error.log*
