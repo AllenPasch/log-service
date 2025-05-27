@@ -4,6 +4,7 @@ import { Log, LogType } from "./schema/Log";
 import { LogFilters, LogFiltersType } from "./schema/LogFilters";
 import { Logs, LogsType } from "./schema/Logs";
 import { Stats, StatsType } from "./schema/Stats";
+import { removeSensitiveData } from "./security/removeSensitiveData";
 
 const server = fastify();
 
@@ -11,9 +12,8 @@ server.post<{ Body: LogType; Reply: LogType }>(
   "/log",
   { schema: { body: Log, response: { 201: Log } } },
   async (request, reply) => {
-    const log = request.body;
+    const log = removeSensitiveData(request.body);
 
-    // TODO: Remove sensitive data.
     // TODO: Store log.
     console.log("POST /log", log);
 
@@ -25,9 +25,8 @@ server.post<{ Body: LogsType; Reply: LogsType }>(
   "/log/batch",
   { schema: { body: Logs, response: { 201: Logs } } },
   async (request, reply) => {
-    const logs = request.body;
+    const logs = request.body.map(removeSensitiveData);
 
-    // TODO: Remove sensitive data.
     // TODO: Store logs.
     console.log("POST /log/batch", logs);
 
