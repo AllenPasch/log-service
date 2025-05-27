@@ -1,12 +1,17 @@
 import fastify from "fastify";
 
-import { Log, LogType } from "./schema/Log";
-import { LogFilters, LogFiltersType } from "./schema/LogFilters";
-import { Logs, LogsType } from "./schema/Logs";
-import { Stats, StatsType } from "./schema/Stats";
+import { addLogs } from "./database/addLogs";
+import { getLogs } from "./database/getLogs";
+import { getStats } from "./database/getStats";
+import { setupDb } from "./database/setupDb";
+import { Log, type LogType } from "./schema/Log";
+import { LogFilters, type LogFiltersType } from "./schema/LogFilters";
+import { Logs, type LogsType } from "./schema/Logs";
+import { Stats, type StatsType } from "./schema/Stats";
 import { removeSensitiveData } from "./security/removeSensitiveData";
 
 const server = fastify();
+setupDb(server);
 
 server.post<{ Body: LogType; Reply: LogType }>(
   "/log",
@@ -14,8 +19,7 @@ server.post<{ Body: LogType; Reply: LogType }>(
   async (request, reply) => {
     const log = removeSensitiveData(request.body);
 
-    // TODO: Store log.
-    console.log("POST /log", log);
+    await addLogs(server.db, [log]);
 
     reply.status(201).send(log);
   }
@@ -27,23 +31,21 @@ server.post<{ Body: LogsType; Reply: LogsType }>(
   async (request, reply) => {
     const logs = request.body.map(removeSensitiveData);
 
-    // TODO: Store logs.
-    console.log("POST /log/batch", logs);
+    await addLogs(server.db, logs);
 
     reply.status(201).send(logs);
   }
 );
 
-server.get<{ Query: LogFiltersType; Reply: LogsType }>(
+server.get<{ Querystring: LogFiltersType; Reply: LogsType }>(
   "/logs",
   { schema: { querystring: LogFilters, response: { 200: Logs } } },
   async (request, reply) => {
     const filters = request.query;
 
-    // TODO: Get this from the database, while applying filtering.
-    const logs: LogsType = [];
-
     console.log("GET /logs filters=", filters);
+
+    const logs = await getLogs(server.db, filters);
 
     reply.status(200).send(logs);
   }
@@ -53,14 +55,7 @@ server.get<{ Reply: StatsType }>(
   "/stats",
   { schema: { response: { 200: Stats } } },
   async (request, reply) => {
-    // TODO: Get the stats from the database.
-    const stats: StatsType = {
-      logCount: {
-        info: 3,
-        warn: 5,
-        error: 2,
-      },
-    };
+    const stats = await getStats(server.db);
 
     reply.status(200).send(stats);
   }

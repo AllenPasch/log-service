@@ -1,4 +1,4 @@
-import { LogType } from "../schema/Log";
+import { type LogType } from "../schema/Log";
 
 /**
  * @see https://stackoverflow.com/a/6640851

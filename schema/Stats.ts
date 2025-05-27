@@ -1,9 +1,9 @@
-import { Static, Type } from "@sinclair/typebox";
+import { Type, type Static } from "@sinclair/typebox";
 
-import { MessageCounts } from "./MessageCounts";
+import { LogCounts } from "./LogCounts";
 
 export const Stats = Type.Object({
-  logCount: MessageCounts,
+  logCount: LogCounts,
 });
 
 export type StatsType = Static<typeof Stats>;

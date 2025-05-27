@@ -7,6 +7,9 @@
 # mac
 .DS_Store
 
+# sqlite
+/sqlite.db
+
 # typescript
 *.js
 *.tsbuildinfo

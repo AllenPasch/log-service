@@ -1,4 +1,4 @@
-import { Static, Type } from "@sinclair/typebox";
+import { Type, type Static } from "@sinclair/typebox";
 
 import { ISO_8601_REGEX } from "./regex";
 import { Severity } from "./Severity";

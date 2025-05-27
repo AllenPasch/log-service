@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 
-import { LogType } from "../schema/Log";
+import { type LogType } from "../schema/Log";
 import { Severity } from "../schema/Severity";
 import { removeSensitiveData } from "./removeSensitiveData";
 
