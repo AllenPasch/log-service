@@ -3,12 +3,13 @@ import fastify from "fastify";
 import { LogFilters, LogFiltersType } from "./schema/LogFilters";
 import { LogMessage, LogMessageType } from "./schema/LogMessage";
 import { LogMessages, LogMessagesType } from "./schema/LogMessages";
+import { Stats, StatsType } from "./schema/Stats";
 
 const server = fastify();
 
 server.post<{ Body: LogMessageType; Reply: LogMessageType }>(
   "/log",
-  { schema: { body: LogMessage, response: { 200: LogMessage } } },
+  { schema: { body: LogMessage, response: { 201: LogMessage } } },
   async (request, reply) => {
     const logMessage = request.body;
 
@@ -22,7 +23,7 @@ server.post<{ Body: LogMessageType; Reply: LogMessageType }>(
 
 server.post<{ Body: LogMessagesType; Reply: LogMessagesType }>(
   "/log/batch",
-  { schema: { body: LogMessages, response: { 200: LogMessages } } },
+  { schema: { body: LogMessages, response: { 201: LogMessages } } },
   async (request, reply) => {
     const logMessages = request.body;
 
@@ -49,7 +50,22 @@ server.get<{ Query: LogFiltersType; Reply: LogMessagesType }>(
   }
 );
 
-// TODO: Add more methods.
+server.get<{ Reply: StatsType }>(
+  "/stats",
+  { schema: { response: { 200: Stats } } },
+  async (request, reply) => {
+    // TODO: Get the stats from the database.
+    const stats: StatsType = {
+      logCount: {
+        info: 3,
+        warn: 5,
+        error: 2,
+      },
+    };
+
+    reply.status(200).send(stats);
+  }
+);
 
 server.listen({ port: 8080 }, (error, address) => {
   if (error) {
