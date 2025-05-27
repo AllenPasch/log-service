@@ -6,6 +6,11 @@ import { LogType } from "../schema/Log";
 export const UUID_REGEX =
   /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
 
+/**
+ * Remove sensitive data from a log, before it gets stored.
+ *
+ * This code assumes UUIDs are used for IDs (e.g. for user IDs) across our services.
+ */
 export const removeSensitiveData = (log: LogType) => {
   const logSensitiveDataRemoved = {
     ...log,
