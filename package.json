@@ -2,14 +2,14 @@
   "name": "log-service",
   "version": "0.0.1",
   "description": "Store and read logs.",
-  "main": "index.js",
+  "main": "server.js",
   "repository": "https://github.com/AllenPasch/log-service.git",
   "author": "Allen Pasch",
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "start": "node index.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "@sinclair/typebox": "^0.34.33",
