@@ -1,6 +1,7 @@
 import { type Database } from "sqlite";
 import { type Database as DatabaseV3, type Statement } from "sqlite3";
 
+import { toTimestampMs } from "./toTimestampMs";
 import { type LogType } from "../schema/Log";
 
 export const addLogs = async (
@@ -9,7 +10,7 @@ export const addLogs = async (
 ) =>
   await Promise.all(
     logs.map(async ({ timestamp, source, severity, message }) => {
-      const timestampMs = new Date(timestamp).getTime();
+      const timestampMs = toTimestampMs(timestamp);
 
       const statement = await db.prepare(
         `INSERT INTO log (
