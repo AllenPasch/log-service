@@ -5,7 +5,7 @@ import { Severity } from "../schema/Severity";
 import { removeSensitiveData } from "./removeSensitiveData";
 
 describe("removeSensitiveData()", () => {
-  test("No sensitive data in log message.", () => {
+  test("When there is no sensitive data, log stays the same.", () => {
     // Arrange
     const log: LogType = {
       timestamp: "2025-03-01T14:25:43Z",
@@ -23,7 +23,7 @@ describe("removeSensitiveData()", () => {
     expect(logSensitiveDataRemoved).toEqual(expectedLog);
   });
 
-  test("Remove patient_id from log message.", () => {
+  test("Remove patient_id field from log.", () => {
     // Arrange
     const log: LogType = {
       timestamp: "2025-03-01T14:25:43Z",
@@ -45,7 +45,7 @@ describe("removeSensitiveData()", () => {
     });
   });
 
-  test("Remove User UUID from log message string.", () => {
+  test("Remove UUID from log message.", () => {
     // Arrange
     const log: LogType = {
       timestamp: "2025-03-01T14:25:43Z",
@@ -67,7 +67,7 @@ describe("removeSensitiveData()", () => {
     });
   });
 
-  test("Remove User UUID in uppercase characters from log message string.", () => {
+  test("Remove UUID (in uppercase characters) from log message.", () => {
     // Arrange
     const log: LogType = {
       timestamp: "2025-03-01T14:25:43Z",
