@@ -1,5 +1,6 @@
 import fastify from "fastify";
 
+import { LogFilters, LogFiltersType } from "./schema/LogFilters";
 import { LogMessage, LogMessageType } from "./schema/LogMessage";
 import { LogMessages, LogMessagesType } from "./schema/LogMessages";
 
@@ -15,7 +16,7 @@ server.post<{ Body: LogMessageType; Reply: LogMessageType }>(
     // TODO: Store log message.
     console.log("POST /log", logMessage);
 
-    reply.status(200).send(logMessage);
+    reply.status(201).send(logMessage);
   }
 );
 
@@ -28,6 +29,21 @@ server.post<{ Body: LogMessagesType; Reply: LogMessagesType }>(
     // TODO: Remove sensitive data.
     // TODO: Store log messages.
     console.log("POST /log/batch", logMessages);
+
+    reply.status(201).send(logMessages);
+  }
+);
+
+server.get<{ Query: LogFiltersType; Reply: LogMessagesType }>(
+  "/logs",
+  { schema: { querystring: LogFilters, response: { 200: LogMessages } } },
+  async (request, reply) => {
+    const filters = request.query;
+
+    // TODO: Get this from the database, while applying filtering.
+    const logMessages: LogMessagesType = [];
+
+    console.log("GET /logs filters=", filters);
 
     reply.status(200).send(logMessages);
   }
