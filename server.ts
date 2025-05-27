@@ -1,9 +1,9 @@
 import fastify from "fastify";
 
-import { Log, LogType } from "./schema/Log";
-import { LogFilters, LogFiltersType } from "./schema/LogFilters";
-import { Logs, LogsType } from "./schema/Logs";
-import { Stats, StatsType } from "./schema/Stats";
+import { Log, type LogType } from "./schema/Log";
+import { LogFilters, type LogFiltersType } from "./schema/LogFilters";
+import { Logs, type LogsType } from "./schema/Logs";
+import { Stats, type StatsType } from "./schema/Stats";
 import { removeSensitiveData } from "./security/removeSensitiveData";
 
 const server = fastify();
