@@ -62,4 +62,34 @@ describe("Stress test the server to see how it handles lots of data.", () => {
     },
     60 * 1000
   );
+
+  test.skip(
+    "Insert more logs than fit in memory, 1_000_000 logs at a time. Should be able to download all of the logs with Postman, curl, or a browser.",
+    async () => {
+      // Arrange
+      const server = fastify();
+      const db = await setupDb(server);
+
+      await db.run("DELETE FROM log");
+
+      const batchCount = 600;
+      const batchSize = 1_000_000;
+
+      // Act
+      for (let batchNumber = 1; batchNumber <= batchCount; batchNumber++) {
+        const logNumbers = [...Array(batchSize).keys()].map(
+          (index) => index + 1
+        );
+        const logs: LogType[] = logNumbers.map((logNumber) => ({
+          timestamp: new Date().toISOString(),
+          source: "stress-test",
+          severity: Severity.info,
+          message: `Batch number: ${batchNumber}, Log number: ${logNumber}`,
+        }));
+
+        await addLogs(db, logs);
+      }
+    },
+    600 * 60 * 1000
+  );
 });
