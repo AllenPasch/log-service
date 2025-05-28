@@ -1,31 +1,39 @@
 import { type Database } from "sqlite";
-import { type Database as DatabaseV3, type Statement } from "sqlite3";
 
 import { toTimestampMs } from "./toTimestampMs";
 import { type LogFiltersType } from "../schema/LogFilters";
 import { type LogType } from "../schema/Log";
+import { type Severity } from "../schema/Severity";
 
+interface LogRecord {
+  readonly timestamp_ms: number;
+  readonly source?: string;
+  readonly severity: Severity;
+  readonly message: string;
+}
+
+// TODO: Return a stream to support more responses larger than the server’s memory.
 export const getLogs = async (
-  db: Database<DatabaseV3, Statement>,
-  filters: LogFiltersType
+  db: Database,
+  { after, before, severity }: LogFiltersType
 ): Promise<LogType[]> => {
   const where: string[] = [];
   const params: (string | number)[] = [];
 
-  if (filters.after) {
+  if (after) {
     where.push("timestamp_ms > ?");
-    params.push(toTimestampMs(filters.after));
+    params.push(toTimestampMs(after));
   }
-  if (filters.before) {
+  if (before) {
     where.push("timestamp_ms < ?");
-    params.push(toTimestampMs(filters.before));
+    params.push(toTimestampMs(before));
   }
-  if (filters.severity?.length) {
-    const inParamPlaceholders = filters.severity.map(() => "?").join(", ");
-    where.push(`severity IN (${inParamPlaceholders})`);
+  if (severity?.length) {
+    const inPlaceholders = severity.map(() => "?").join(", ");
+    where.push(`severity IN (${inPlaceholders})`);
 
-    filters.severity.forEach((severity) => {
-      params.push(severity);
+    severity.forEach((severityEntry) => {
+      params.push(severityEntry);
     });
   }
 
@@ -36,7 +44,7 @@ export const getLogs = async (
   }
   query = `${query} ORDER BY timestamp_ms`;
 
-  const logs = await db.all(query, params);
+  const logs = await db.all<readonly LogRecord[]>(query, params);
 
   return logs.map(({ timestamp_ms, source, severity, message }) => ({
     timestamp: new Date(timestamp_ms).toISOString(),

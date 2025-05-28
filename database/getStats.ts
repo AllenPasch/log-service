@@ -1,14 +1,16 @@
 import { type Database } from "sqlite";
-import { type Database as DatabaseV3, type Statement } from "sqlite3";
 
 import { type LogCountsType } from "../schema/LogCounts";
-import { Severity } from "../schema/Severity";
+import { type Severity } from "../schema/Severity";
 import { type StatsType } from "../schema/Stats";
 
-export const getStats = async (
-  db: Database<DatabaseV3, Statement>
-): Promise<StatsType> => {
-  const counts = await db.all(`
+interface StatRecord {
+  readonly severity: Severity;
+  readonly count: number;
+}
+
+export const getStats = async (db: Database): Promise<StatsType> => {
+  const counts = await db.all<readonly StatRecord[]>(`
     SELECT
       severity,
       COUNT(*) count
@@ -23,11 +25,9 @@ export const getStats = async (
     error: 0,
   };
 
-  counts.forEach(
-    ({ severity, count }: { severity: Severity; count: number }) => {
-      logCount[severity] = count;
-    }
-  );
+  counts.forEach(({ severity, count }) => {
+    logCount[severity] = count;
+  });
 
   return {
     logCount,

@@ -9,6 +9,7 @@
 
 # sqlite
 /sqlite.db
+/sqlite.db-*
 
 # typescript
 *.js
