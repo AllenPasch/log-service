@@ -7,7 +7,11 @@ export const setupDb = async (server: FastifyInstance): Promise<Database> => {
     dbFilename: "./sqlite.db",
   });
 
-  await server.db.migrate();
+  const db = server.db;
 
-  return server.db;
+  await db.migrate();
+
+  await db.run("PRAGMA journal_mode=WAL;");
+
+  return db;
 };
