@@ -12,7 +12,7 @@ interface LogRecord {
   readonly message: string;
 }
 
-// TODO: Return a Stream to support more than memory-sized responses.
+// TODO: Return a stream to support more responses larger than the server’s memory.
 export const getLogs = async (
   db: Database,
   { after, before, severity }: LogFiltersType
