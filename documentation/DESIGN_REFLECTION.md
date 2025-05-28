@@ -18,3 +18,33 @@
 | :--------------------: | :----------------------------------: |
 |         ✅ yes         |          ✅ 38.781 seconds           |
 |         ❌ no          |          ❌ 343.937 seconds          |
+
+## Production Deployment on AWS
+
+### Option 1: Managed Services (Allen’s Favorite)
+
+Amazon has a managed service called [Amazon CloudWatch Logs](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html), which:
+
+- Automatically receives logs from Amazon ECS and AWS Lambda services.
+- Automatically deletes logs after a defined number of days, which is important for GDPR.
+- Has a [rich query language](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_QuerySyntax-examples.html) for searching logs.
+- Is a bit expensive.
+
+![Option 1: Managed Services](./aws-1-cloudwatch.drawio.png)
+
+### Option 2: `log-service`
+
+This shows how I usually implement user authentication and Role-Based Access Control (RBAC) in services:
+
+![Option 2: log-service](./aws-2-log-service.drawio.png)
+
+In many cases, [Microsoft Entra ID](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id) is a better choice than Amazon Cognito.
+
+## Audit Logs
+
+In every API endpoint, log the:
+
+- `timestamp`
+- API endpoint
+- `practitioner_id`
+  - New field filled in whenever a non-patient uses an API.
